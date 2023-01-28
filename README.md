@@ -1,2 +1,3 @@
-# stoploss
-Technical Analysis Library for Stocks, Futures and CryptoCurrencies
+# AutoTrade Engine
+
+Technical Analysis Library for OptionsBuy
