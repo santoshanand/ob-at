@@ -11,20 +11,8 @@ import (
 
 // Config -
 type Config struct {
-	LotSizeURL           string `mapstructure:"LOT_SIZE_CSV"`
-	InstrumentZerodhaURL string `mapstructure:"INSTRUMENT_ZERODHA_CSV"`
-	Username             string `mapstructure:"Z_USERNAME"`
-	Password             string `mapstructure:"Z_PASSWORD"`
-	ServerAddress        string `mapstructure:"SERVER_ADDRESS"`
-	Environment          string `mapstructure:"ENVIRONMENT"`
-	RunCron              bool   `mapstructure:"RUN_CRON"`
-	PostgresDBURL        string `mapstructure:"POSTGRES_DB_URL"`
-	NseHostURL           string `mapstructure:"NSE_HOST_URL"`
-	ZerodhaHostURL       string `mapstructure:"ZERODHA_HOST_URL"`
-	TestCron             bool   `mapstructure:"TEST_CRON"`
-	LoadStocks           bool   `mapstructure:"LOAD_STOCKS"`
-	BUY                  bool   `mapstructure:"BUY"`
-	IndicesTradeInterval string `mapstructure:"INDICES_TRADE_INTERVAL"`
+	ServerAddress string `mapstructure:"SERVER_ADDRESS"`
+	PostgresDBURL string `mapstructure:"POSTGRES_DB_URL"`
 }
 
 // NewConfig -

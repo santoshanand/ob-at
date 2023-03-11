@@ -9,7 +9,7 @@ import (
 
 // IDao - interface of dao
 type IDao interface {
-	NewTraderDao() ITrader
+	NewUserDao() IUser
 }
 
 type dao struct {
@@ -18,9 +18,9 @@ type dao struct {
 	db  *gorm.DB
 }
 
-// NewTraderDao implements IDao
-func (d *dao) NewTraderDao() ITrader {
-	return NewTrader(d.getParams())
+// NewUserDao implements IDao
+func (d *dao) NewUserDao() IUser {
+	return NewUser(d.getParams())
 }
 
 func (d *dao) getParams() *dao {

@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  db:
+    container_name: pg-db
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ob_user
+      POSTGRES_PASSWORD: 982345
+      POSTGRES_DB: optionsbuy
+    ports:
+      - "15432:5432"
+    volumes:
+      - ob_storage:/var/lib/postgresql/data/
+volumes:
+  ob_storage:

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/santoshanand/at/modules/common/config"
+	"github.com/santoshanand/at/modules/common/database/entities"
 	"github.com/santoshanand/at/modules/common/utils"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
@@ -37,9 +38,20 @@ func (d *database) openPostgresDB() (*gorm.DB, error) {
 	if err != nil {
 		panic(err)
 	}
-	// d.migrate(db)
-	d.log.Debug("pgsql connected")
+	d.migrate(db)
+	d.log.Debug("db connected")
 	return db, err
+}
+
+func (d *database) migrate(db *gorm.DB) {
+	err := db.AutoMigrate(
+		&entities.User{},
+		&entities.Setting{},
+	)
+	if err != nil {
+		d.log.Debug("migration error: ", err.Error())
+		return
+	}
 }
 
 // Module - database module
