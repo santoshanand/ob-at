@@ -7,6 +7,17 @@ import (
 	"go.uber.org/zap"
 )
 
+var (
+	// ZerodhaBroker -
+	ZerodhaBroker = "zerodha"
+	// AngelOneBroker -
+	AngelOneBroker = "angelone"
+	// FyersBroker -
+	FyersBroker = "fyers"
+	// ICICIBroker -
+	ICICIBroker = "icici"
+)
+
 type params struct {
 	log     *zap.SugaredLogger
 	cfg     *config.Config

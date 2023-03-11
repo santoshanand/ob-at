@@ -1,6 +1,8 @@
 package zerodha
 
 import (
+	"errors"
+
 	"github.com/santoshanand/at-kite/kite"
 	"github.com/santoshanand/at/modules/common/config"
 	"github.com/santoshanand/at/modules/common/database/dao"
@@ -10,7 +12,7 @@ import (
 
 // IZerodha -
 type IZerodha interface {
-	Login(req LoginDTO) bool
+	Login(req LoginDTO) (*kite.UserProfile, error)
 }
 
 type zerodha struct {
@@ -21,8 +23,16 @@ type zerodha struct {
 }
 
 // Login implements IZerodha
-func (z *zerodha) Login(req LoginDTO) bool {
-	return false
+func (z *zerodha) Login(req LoginDTO) (*kite.UserProfile, error) {
+	z.kConnect.SetAccessToken(req.Token)
+	profile, err := z.kConnect.GetUserProfile()
+	if err != nil {
+		return nil, err
+	}
+	if profile.UserID != req.UserID {
+		return nil, errors.New("user id is not correct")
+	}
+	return &profile, nil
 }
 
 // NewZerodha - new instance of zerodha

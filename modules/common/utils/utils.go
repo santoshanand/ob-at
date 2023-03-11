@@ -23,6 +23,16 @@ func ToString(v interface{}) string {
 	return string(jsonString)
 }
 
+// Transform - Unmarshal
+func Transform(data string, v interface{}) error {
+	err := json.Unmarshal([]byte(data), v)
+	if err != nil {
+		fmt.Println("unmarshal error ", err.Error())
+		return err
+	}
+	return nil
+}
+
 // IsNotEmpty - used to check string is not empty
 func IsNotEmpty(value string) bool {
 	if len(strings.Trim(value, " ")) > 0 {

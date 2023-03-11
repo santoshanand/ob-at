@@ -44,10 +44,11 @@ func (o options) homeRoute(app *fiber.App) {
 }
 
 func (o options) apiRoutes(app *fiber.App) {
-	api := app.Group("/api", logger.New())
+	api := app.Group("/api")
 	v1 := api.Group("/v1")
 
 	v1.Post("/login", o.handlers.LoginAPI())
+	v1.Post("/logout", o.handlers.LoginOutAPI())
 }
 
 // startApp - it will run fiber application
