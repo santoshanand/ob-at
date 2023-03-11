@@ -7,6 +7,9 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/robfig/cron"
 	"github.com/santoshanand/at/modules/app"
+	"github.com/santoshanand/at/modules/app/handlers"
+	"github.com/santoshanand/at/modules/brokers"
+	"github.com/santoshanand/at/modules/brokers/zerodha"
 	"github.com/santoshanand/at/modules/common"
 	"github.com/santoshanand/at/modules/common/config"
 	"github.com/santoshanand/at/modules/common/database/dao"
@@ -21,6 +24,9 @@ var Module = fx.Options(
 	common.Module,
 	dao.Module,
 	app.Module,
+	handlers.Module,
+	zerodha.Module,
+	brokers.Module,
 	fx.Invoke(registerHooks),
 )
 

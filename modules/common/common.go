@@ -5,7 +5,6 @@ import (
 	"github.com/santoshanand/at/modules/common/database"
 	"github.com/santoshanand/at/modules/common/job"
 	"github.com/santoshanand/at/modules/common/logger"
-	"github.com/santoshanand/at/modules/common/router"
 	"go.uber.org/fx"
 )
 
@@ -15,5 +14,4 @@ var Module = fx.Options(
 	database.Module,
 	job.Module,
 	logger.Module,
-	router.Module,
 )

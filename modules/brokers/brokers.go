@@ -1,34 +1,38 @@
 package brokers
 
 import (
+	"github.com/santoshanand/at/modules/brokers/zerodha"
 	"github.com/santoshanand/at/modules/common/config"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 )
 
 type params struct {
-	log *zap.SugaredLogger
-	cfg *config.Config
+	log     *zap.SugaredLogger
+	cfg     *config.Config
+	zerodha zerodha.IZerodha
 }
 
 // AngelOne implements IBrokers
-func (p *params) AngelOne() {
+func (p *params) Zerodha() zerodha.IZerodha {
+	return p.zerodha
 }
 
 // IBrokers - broker interface
 type IBrokers interface {
-	AngelOne()
+	Zerodha() zerodha.IZerodha
 }
 
 // NewBrokers - instance of brokers
-func NewBrokers(log *zap.SugaredLogger, cfg *config.Config) IBrokers {
+func newBrokers(log *zap.SugaredLogger, cfg *config.Config, zerodha zerodha.IZerodha) IBrokers {
 	return &params{
-		log: log,
-		cfg: cfg,
+		log:     log,
+		cfg:     cfg,
+		zerodha: zerodha,
 	}
 }
 
 // Module - brokers module
 var Module = fx.Options(
-	fx.Provide(NewBrokers),
+	fx.Provide(newBrokers),
 )

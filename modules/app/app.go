@@ -10,6 +10,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/template/html"
+	"github.com/santoshanand/at/modules/app/handlers"
 	"github.com/santoshanand/at/modules/common/config"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
@@ -17,12 +18,13 @@ import (
 
 const idleTimeout = 5 * time.Second
 
-// go:embed views/*
-// var viewsfs embed.FS
+type options struct {
+	log      *zap.SugaredLogger
+	cfg      *config.Config
+	handlers handlers.IHandlers
+}
 
-// RunApp - it will run fiber application
-func RunApp(log *zap.SugaredLogger, cfg *config.Config) *fiber.App {
-	engine := html.New("./views", ".html")
+func addAsset(engine *html.Engine) {
 	engine.AddFunc("getCssAsset", func(name string) (res template.HTML) {
 		filepath.Walk("public/styles", func(path string, info os.FileInfo, err error) error {
 			if err != nil {
@@ -35,7 +37,30 @@ func RunApp(log *zap.SugaredLogger, cfg *config.Config) *fiber.App {
 		})
 		return
 	})
-	// engine := html.NewFileSystem(http.FS(viewsfs), ".html")
+}
+
+func (o options) homeRoute(app *fiber.App) {
+	app.Get("/", o.handlers.HomeHandler())
+}
+
+func (o options) apiRoutes(app *fiber.App) {
+	api := app.Group("/api", logger.New())
+	v1 := api.Group("/v1")
+
+	v1.Post("/login", o.handlers.LoginAPI())
+}
+
+// startApp - it will run fiber application
+func startApp(log *zap.SugaredLogger, cfg *config.Config, hadlers handlers.IHandlers) *fiber.App {
+	option := &options{
+		log:      log,
+		cfg:      cfg,
+		handlers: hadlers,
+	}
+
+	engine := html.New("./views", ".html")
+	addAsset(engine)
+
 	app := fiber.New(fiber.Config{
 		IdleTimeout: idleTimeout,
 		Views:       engine,
@@ -44,19 +69,15 @@ func RunApp(log *zap.SugaredLogger, cfg *config.Config) *fiber.App {
 
 	app.Use(recover.New())
 	app.Use(logger.New())
-
 	app.Static("/public", "./public")
-	app.Get("/", func(c *fiber.Ctx) error {
-		// Render index template
-		return c.Render("index", fiber.Map{
-			"Title": "Hello, World!",
-		})
-	})
+
+	option.homeRoute(app)
+	option.apiRoutes(app)
 
 	return app
 }
 
 // Module - database module
 var Module = fx.Options(
-	fx.Provide(RunApp),
+	fx.Provide(startApp),
 )
