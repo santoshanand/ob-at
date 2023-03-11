@@ -65,3 +65,6 @@ go.work
 
 .env
 .vscode
+
+node_modules
+.parcel-cache
