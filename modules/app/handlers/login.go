@@ -41,6 +41,7 @@ func (h *handlers) LoginAPI() fiber.Handler {
 			if userID == loginDTO.UserID && strings.ToLower(broker) == brokers.ZerodhaBroker && utils.IsNotEmpty(sID) && !s.Fresh() {
 				profile := fmt.Sprintf("%v", s.Get("data"))
 				utils.Transform(profile, &profileDTO)
+				profileDTO.SessionID = sID
 				h.log.Debug("user id: ", loginDTO.UserID, " broker: ", loginDTO.Broker, " already logged in")
 				return c.JSON(okRes(profileDTO))
 			}
@@ -57,6 +58,7 @@ func (h *handlers) LoginAPI() fiber.Handler {
 				s.Set("broker", loginDTO.Broker)
 				s.Set("data", utils.ToString(profileDTO))
 				s.Set("s_id", sessionID)
+				s.Set("access_token", loginDTO.Token)
 				s.Save()
 				profileDTO.SessionID = sessionID
 			}

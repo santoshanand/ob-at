@@ -29,10 +29,10 @@ func (h *handlers) LoginOutAPI() fiber.Handler {
 		if sID != logoutDTO.SessionID {
 			return c.Status(400).JSON(errRes("invalid session id", inputError))
 		}
-		s.Delete("user_id")
-		s.Delete("broker")
-		s.Delete("s_id")
-		s.Delete("data")
+		err = h.store.Storage.Delete(sID)
+		if err != nil {
+			return c.Status(400).JSON(errRes(err.Error(), inputError))
+		}
 		return c.JSON(okRes(true))
 	}
 }
