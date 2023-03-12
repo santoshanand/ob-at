@@ -12,24 +12,24 @@ type IDao interface {
 	NewUserDao() IUser
 }
 
-type dao struct {
+type params struct {
 	log *zap.SugaredLogger
 	cfg *config.Config
 	db  *gorm.DB
 }
 
 // NewUserDao implements IDao
-func (d *dao) NewUserDao() IUser {
+func (d *params) NewUserDao() IUser {
 	return NewUser(d.getParams())
 }
 
-func (d *dao) getParams() *dao {
+func (d *params) getParams() *params {
 	return d
 }
 
 // NewDao -
 func NewDao(log *zap.SugaredLogger, cfg *config.Config, db *gorm.DB) IDao {
-	return &dao{
+	return &params{
 		log: log,
 		cfg: cfg,
 		db:  db,

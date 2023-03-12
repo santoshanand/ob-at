@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"fmt"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/santoshanand/at/modules/app/dto"
 )
@@ -21,15 +19,8 @@ func (h *handlers) LoginOutAPI() fiber.Handler {
 			h.log.Debug("error validate: ", err.Error())
 			return c.Status(400).JSON(errRes(err.Error(), inputError))
 		}
-		s, err := h.store.Get(c)
-		if err != nil {
-			h.log.Debug("error to get session: ", err.Error())
-		}
-		sID := fmt.Sprintf("%v", s.Get("s_id"))
-		if sID != logoutDTO.SessionID {
-			return c.Status(400).JSON(errRes("invalid session id", inputError))
-		}
-		err = h.store.Storage.Delete(sID)
+
+		err = h.dao.NewUserDao().Logout(*logoutDTO)
 		if err != nil {
 			return c.Status(400).JSON(errRes(err.Error(), inputError))
 		}

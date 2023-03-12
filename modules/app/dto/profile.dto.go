@@ -10,11 +10,10 @@ type ProfileDTO struct {
 	Email     string `json:"email"`
 	AvatarURL string `json:"avatar_url"`
 	Username  string `json:"username"`
-	SessionID string `json:"session_id"`
 }
 
 // ToProfile - profile mapper
-func (p ProfileDTO) ToProfile(profile *kite.UserProfile) ProfileDTO {
+func (p *ProfileDTO) ToProfile(profile *kite.UserProfile) ProfileDTO {
 	return ProfileDTO{
 		ShortName: profile.UserShortName,
 		UserID:    profile.UserID,

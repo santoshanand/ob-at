@@ -23,6 +23,11 @@ func ToString(v interface{}) string {
 	return string(jsonString)
 }
 
+// FormatTimeToYYYYMMDDDate - given value will be formatted in 2023-01-20
+func FormatTimeToYYYYMMDDDate(value time.Time) string {
+	return value.Format(YYMMDDDateFormat)
+}
+
 // Transform - Unmarshal
 func Transform(data string, v interface{}) error {
 	err := json.Unmarshal([]byte(data), v)
