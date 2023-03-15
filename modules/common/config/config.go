@@ -11,8 +11,17 @@ import (
 
 // Config -
 type Config struct {
-	ServerAddress string `mapstructure:"SERVER_ADDRESS"`
-	PostgresDBURL string `mapstructure:"POSTGRES_DB_URL"`
+	ServerAddress            string `mapstructure:"SERVER_ADDRESS"`
+	PostgresDBURL            string `mapstructure:"POSTGRES_DB_URL"`
+	NiftyInstrumentToken     int    `mapstructure:"NIFTY_INDICES"`
+	BankNiftyInstrumentToken int    `mapstructure:"BANKNIFTY_INDICES"`
+	FinniftyInstrumentToken  int    `mapstructure:"FINNIFTY_INDICES"`
+	KiteURL                  string `mapstructure:"KITE_URL"`
+}
+
+// GetUsername - get username
+func (cfg Config) GetUsername() string {
+	return viper.GetString("Z_USERNAME")
 }
 
 // NewConfig -

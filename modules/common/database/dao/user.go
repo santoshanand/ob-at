@@ -7,6 +7,7 @@ import (
 	"github.com/santoshanand/at/modules/common/config"
 	"github.com/santoshanand/at/modules/common/database/entities"
 	"github.com/santoshanand/at/modules/common/utils"
+	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
@@ -15,6 +16,7 @@ import (
 type IUser interface {
 	Upsert(user *entities.User) (*entities.User, error)
 	GetLogInUser(loginDTO dto.LoginDTO) (*entities.User, error)
+	GetSuperToken() (*string, error)
 	Logout(logoutDTO dto.LogoutDTO) error
 }
 
@@ -22,6 +24,16 @@ type user struct {
 	log *zap.SugaredLogger
 	cfg *config.Config
 	db  *gorm.DB
+}
+
+// GetSuperToken implements IUser
+func (u *user) GetSuperToken() (*string, error) {
+	user := viper.GetString("ADMIN_USER")
+	r := &entities.User{}
+	if res := u.db.Where("user_id=?", user).First(r); res.Error != nil {
+		return nil, res.Error
+	}
+	return &r.AccessToken, nil
 }
 
 // GetLogInUser implements IUser
@@ -83,6 +95,7 @@ func (u *user) Upsert(e *entities.User) (*entities.User, error) {
 		return e, nil
 	}
 	user.LoginAt = utils.CurrentTime()
+	user.AccessToken = e.AccessToken
 	if res := u.db.Where("user_id=? and broker=?", e.UserID, user.Broker).Updates(user); res.Error != nil {
 		return nil, res.Error
 	}

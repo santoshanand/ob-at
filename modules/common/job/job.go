@@ -1,28 +1,27 @@
 package job
 
 import (
-	"time"
-
 	"github.com/robfig/cron"
 	"github.com/santoshanand/at/modules/common/config"
+	"github.com/santoshanand/at/modules/common/utils"
+	"github.com/santoshanand/at/modules/strategies"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 )
 
-const asiaTimezone = "Asia/Kolkata"
-
 // Params - cron job struct
 type params struct {
-	cron *cron.Cron
-	log  *zap.SugaredLogger
-	cfg  *config.Config
+	cron     *cron.Cron
+	log      *zap.SugaredLogger
+	cfg      *config.Config
+	strategy strategies.IStrategies
 }
 
 // scheduleCronJob - used to create a single instance of the service
 func (p *params) scheduleCronJob() error {
 	log := p.log
 
-	err := p.cron.AddFunc("6 18 9 * * 1-5", p.morningTrade)
+	err := p.cron.AddFunc("6 15 9 * * 1-5", p.morningTrade)
 	if err != nil {
 		log.Debug("error to add refresh instrument cron:", err.Error())
 		return err
@@ -32,21 +31,21 @@ func (p *params) scheduleCronJob() error {
 }
 
 func (p *params) morningTrade() {
-	p.log.Debug("start morningTrade cron")
-	defer p.log.Debug("end morningTrade cron")
+	p.strategy.Morning()
 }
 
 // NewCron - instance of cron job
-func NewCron(log *zap.SugaredLogger, cfg *config.Config) *cron.Cron {
-	loc, err := time.LoadLocation(asiaTimezone)
+func newCron(log *zap.SugaredLogger, cfg *config.Config, strategy strategies.IStrategies) *cron.Cron {
+	loc, err := utils.GetISTLocation()
 	if err != nil {
 		panic(err)
 	}
 	cronJob := cron.NewWithLocation(loc)
 	p := &params{
-		cron: cronJob,
-		log:  log,
-		cfg:  cfg,
+		cron:     cronJob,
+		log:      log,
+		cfg:      cfg,
+		strategy: strategy,
 	}
 	err = p.scheduleCronJob()
 	if err != nil {
@@ -59,10 +58,11 @@ func NewCron(log *zap.SugaredLogger, cfg *config.Config) *cron.Cron {
 	for _, entry := range entries {
 		p.log.Debug("Cron : ", entry.Next)
 	}
+
 	return cronJob
 }
 
 // Module provided to fx
 var Module = fx.Options(
-	fx.Provide(NewCron),
+	fx.Provide(newCron),
 )

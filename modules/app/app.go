@@ -1,9 +1,6 @@
 package app
 
 import (
-	"html/template"
-	"os"
-	"path/filepath"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -22,21 +19,6 @@ type options struct {
 	log      *zap.SugaredLogger
 	cfg      *config.Config
 	handlers handlers.IHandlers
-}
-
-func addAsset(engine *html.Engine) {
-	engine.AddFunc("getCssAsset", func(name string) (res template.HTML) {
-		filepath.Walk("public/styles", func(path string, info os.FileInfo, err error) error {
-			if err != nil {
-				return err
-			}
-			if info.Name() == name {
-				res = template.HTML("<link rel=\"stylesheet\" href=\"/" + path + "\">")
-			}
-			return nil
-		})
-		return
-	})
 }
 
 func (o options) homeRoute(app *fiber.App) {

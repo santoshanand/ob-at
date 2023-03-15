@@ -13,6 +13,8 @@ import (
 	"github.com/santoshanand/at/modules/common"
 	"github.com/santoshanand/at/modules/common/config"
 	"github.com/santoshanand/at/modules/common/database/dao"
+	"github.com/santoshanand/at/modules/data"
+	"github.com/santoshanand/at/modules/strategies"
 
 	"go.uber.org/fx"
 	"go.uber.org/zap"
@@ -27,6 +29,8 @@ var Module = fx.Options(
 	handlers.Module,
 	zerodha.Module,
 	brokers.Module,
+	strategies.Module,
+	data.Module,
 	fx.Invoke(registerHooks),
 )
 

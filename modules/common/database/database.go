@@ -11,7 +11,6 @@ import (
 	"go.uber.org/zap"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
 type database struct {
@@ -31,7 +30,7 @@ func (d *database) openPostgresDB() (*gorm.DB, error) {
 		return nil, errors.New("url is empty")
 	}
 	db, err := gorm.Open(postgres.Open(url), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
+		// Logger: logger.Default.LogMode(logger.Info),
 		NowFunc: func() time.Time {
 			return utils.CurrentTime()
 		},

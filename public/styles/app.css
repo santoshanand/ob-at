@@ -227,6 +227,10 @@ img, video {
   --tw-backdrop-sepia: ;
 }
 
+.-m-48 {
+  margin: -12rem;
+}
+
 .flex {
   display: flex;
 }
@@ -239,16 +243,16 @@ img, video {
   height: 100vh;
 }
 
+.w-full {
+  width: 100%;
+}
+
 .w-screen {
   width: 100vw;
 }
 
-.place-content-center {
-  place-content: center;
-}
-
-.content-center {
-  align-content: center;
+.items-center {
+  align-items: center;
 }
 
 .justify-center {

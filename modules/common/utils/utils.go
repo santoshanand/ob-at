@@ -65,6 +65,16 @@ func CurrentTime() time.Time {
 	return now.In(loc)
 }
 
+// ToIST - current IST time
+func ToIST(value time.Time) time.Time {
+	loc, err := time.LoadLocation(AsiaTimezone)
+	if err != nil {
+		fmt.Println("error current location: ", err.Error())
+		return value
+	}
+	return value.In(loc)
+}
+
 // GetISTLocation -
 func GetISTLocation() (*time.Location, error) {
 	return time.LoadLocation(AsiaTimezone)

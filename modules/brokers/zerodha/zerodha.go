@@ -13,6 +13,8 @@ import (
 // IZerodha -
 type IZerodha interface {
 	Login(req LoginDTO) (*kite.UserProfile, error)
+	DataByInterval(instrumentToken int, interval string) ([]Candle, error)
+	GetOHLC(instruments ...string) (kite.QuoteOHLC, error)
 }
 
 type zerodha struct {
@@ -20,6 +22,7 @@ type zerodha struct {
 	log      *zap.SugaredLogger
 	cfg      *config.Config
 	dao      dao.IDao
+	token    string
 }
 
 // Login implements IZerodha
@@ -36,7 +39,7 @@ func (z *zerodha) Login(req LoginDTO) (*kite.UserProfile, error) {
 }
 
 // NewZerodha - new instance of zerodha
-func newZerodha(log *zap.SugaredLogger, cfg *config.Config, dao dao.IDao) IZerodha {
+func NewZerodha(log *zap.SugaredLogger, cfg *config.Config, dao dao.IDao) IZerodha {
 	return &zerodha{
 		kConnect: kite.New(""),
 		log:      log,
@@ -47,5 +50,5 @@ func newZerodha(log *zap.SugaredLogger, cfg *config.Config, dao dao.IDao) IZerod
 
 // Module provided to fx
 var Module = fx.Options(
-	fx.Provide(newZerodha),
+	fx.Provide(NewZerodha),
 )
